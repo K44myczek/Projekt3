@@ -1,0 +1,165 @@
+using System;
+using System.Numerics;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+
+namespace ConsoleApp24
+{
+    class Program
+    {
+        static void rekurencyjnyprawy(int[] tab, int left, int right)//metoda sortuj¹ca quicksort rekurencyjnie z median¹ z prawej
+        {
+            int i, j, x;
+            i = left;
+            j = right;
+            x = tab[right];
+
+            do
+            {
+                while (tab[i] < x) i++;
+                while (x < tab[j]) j--;
+                if (i <= j)
+                {
+                    int buf = tab[i];
+                    tab[i] = tab[j];
+                    tab[j] = buf;
+                    i++;
+                    j--;
+                }
+            } while (i <= j);
+
+            if (left < j) rekurencyjnyprawy(tab, left, j);
+            if (i < right) rekurencyjnyprawy(tab, i, right);
+        }
+        static void rekurencyjnysrodkowy(int[] tab, int left, int right)//metoda sortuj¹ca quicksort rekurencyjnie z median¹ na œrodku
+        {
+            int i, j, x;
+            i = left;
+            j = right;
+            x = tab[(left + right) / 2];
+
+            do
+            {
+                while (tab[i] < x) i++;
+                while (x < tab[j]) j--;
+                if (i <= j)
+                {
+                    int buf = tab[i];
+                    tab[i] = tab[j];
+                    tab[j] = buf;
+                    i++;
+                    j--;
+                }
+            } while (i <= j);
+
+            if (left < j) rekurencyjnysrodkowy(tab, left, j);
+            if (i < right) rekurencyjnysrodkowy(tab, i, right);
+        }
+        static void rekurencyjnylosowy(int[] tab, int left, int right)//metoda sortuj¹ca quicksort rekurencyjnie z median¹ losow¹
+        {
+            int i, j, x;
+            i = left;
+            j = right;
+            Random rand = new Random(Guid.NewGuid().GetHashCode());
+            x = tab[rand.Next(right - left) + left];
+
+            do
+            {
+                while (tab[i] < x) i++;
+                while (x < tab[j]) j--;
+                if (i <= j)
+                {
+                    int buf = tab[i];
+                    tab[i] = tab[j];
+                    tab[j] = buf;
+                    i++;
+                    j--;
+                }
+            } while (i <= j);
+
+            if (left < j) rekurencyjnylosowy(tab, left, j);
+            if (i < right) rekurencyjnylosowy(tab, i, right);
+        }
+
+
+
+
+
+
+
+        static public int[] aksztaltna(int[] tab)//metoda zwaraca tablice aksztaltna
+        {
+            int a = tab.Length - 1;
+            int b = 1;
+            for (int i = 0; i < tab.Length; i++)
+            {
+                if (i == tab.Length / 2)
+                {
+                    tab[i] = tab.Length;
+                }
+                else if (i < tab.Length / 2)
+                {
+                    tab[i] = b;
+                    b += 2;
+                }
+                else
+                {
+                    tab[i] = a;
+                    a -= 2;
+                }
+            }
+            return tab;
+
+
+        }
+        static void sw()
+        {
+            Console.WriteLine("rozmiar\tprawy\tsrodkowy\tlosowy");
+            Stopwatch stopwatch = new Stopwatch();
+            int lp = 1;
+            for (int i = 50000; i <= 200000; i += 10000)
+            {
+
+                int[] tab = new int[i];
+                aksztaltna(tab);//zwraca tablice aksztalta
+
+                stopwatch.Start();//stoper start
+                rekurencyjnyprawy(tab, 0, tab.Length - 1);//zaimplementowana tablica do metody
+                stopwatch.Stop();//stoper stop
+                Console.Write(tab.Length + "\t" + stopwatch.Elapsed.TotalSeconds.ToString("F8"));
+                stopwatch.Reset();//reset pomiaru
+                aksztaltna(tab);//zwraca tablice aksztaltna
+                stopwatch.Start();//stoper start
+                rekurencyjnysrodkowy(tab, 0, tab.Length - 1);//zaimplementowana tablica do metody
+                stopwatch.Stop();//stoper stop
+                Console.Write("\t" + stopwatch.Elapsed.TotalSeconds.ToString("F8"));
+                stopwatch.Reset();//reset pomiaru
+                aksztaltna(tab);//zwraca tablice aksztaltna
+                stopwatch.Start();//stoper start
+                rekurencyjnylosowy(tab, 0, tab.Length - 1);//zaimplementowana tablica do metody
+                stopwatch.Stop();//stoper stop
+                Console.Write("\t" + stopwatch.Elapsed.TotalSeconds.ToString("F8"));
+                stopwatch.Reset();//reset pomiaru
+                Console.Write("\n");
+            }
+        }
+        static void Main(string[] args)
+        {
+            ThreadStart operation = new ThreadStart(sw);
+            Thread thr = new Thread(operation, 40000000);
+            thr.Start();
+            Console.ReadKey();
+
+
+
+
+
+
+        }
+    }
+}
+

@@ -1,0 +1,129 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace Projekt3
+{
+    class Program
+    {
+        public static int[] vksztaltna(int[] tab) //zwracanie tablicy wype³nionej v-ksztaltnie
+        {
+            int x = tab.Length;
+            int y = 2;
+            for (int i = 0; i < tab.Length; i++, x -= 2)
+            {
+                if (i == tab.Length / 2)
+                {
+                    tab[i] = 1;
+                }
+                else if (i < tab.Length / 2)
+                {
+                    tab[i] = x;
+                }
+                else
+                {
+                    tab[i] = y;
+                    y += 2;
+                }
+            }
+            return tab;
+        }
+        public static int[] rosnaca(int[] tab)//zwracanie tablicy wype³nionej rosn¹co
+        {
+            for (int i = 0; i < tab.Length; i++)
+            {
+                tab[i] = i + 1;
+            }
+            return tab;
+        }
+        public static int[] malejaca(int[] tab)//zwracanie tablicy wype³nionej malej¹co
+        {
+            int x = tab.Length;
+            for (int i = 0; i < tab.Length; i++)
+            {
+                tab[i] = x;
+                x--;
+            }
+            return tab;
+        }
+        public static int[] stala(int[] tab)//zwracanie tablicy wype³nionej sta³ymi wartoœciami
+        {
+            for (int i = 0; i < tab.Length; i++)
+            {
+                tab[i] = tab.Length;
+            }
+            return tab;
+        }
+        public static int[] losowa(int[] tab)//zwracanie tablicy wype³nionej losowo
+        {
+            Random rand = new Random();
+            for (int i = 0; i < tab.Length; i++)
+            {
+                tab[i] = rand.Next(50000, 200000);
+            }
+            return tab;
+        }
+        static public int[] InsertionSort(int[] tab)//metoda sortowania przez wstawianie
+        {
+            for (uint i = 1; i < tab.Length; i++)
+            {
+                uint j = i;
+                int temp = tab[j];
+
+                while ((j > 0) && (tab[j - 1] > temp))
+                {
+                    tab[j] = tab[j - 1];
+                    j--;
+                }
+
+                tab[j] = temp;
+            }
+            return tab;
+        }
+        static void Main(string[] args)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            Console.WriteLine("rozmiar\tlosowa\t\trosnaca\t\tmalejaca\tstala\t\tvksztaltna");
+            for (int i = 50000; i <= 200000; i += 10000)
+            {
+                int[] tab = new int[i];
+                Console.Write(i + "\t");
+                losowa(tab);//metoda zwracaj¹ca tablicê losowa
+                stopwatch.Start();//rozpoczêcie pomiaru czasu
+                InsertionSort(tab);//zaimplementowanie tablicy losowej do metody sortuj¹cej
+                stopwatch.Stop();//zakoñczenie pomiaru czasu
+                Console.Write(stopwatch.Elapsed.TotalSeconds.ToString("F8") + "\t");
+                stopwatch.Reset();//reset pomiaru
+                rosnaca(tab);//metoda zwracaj¹ca tablicê rosnaca
+                stopwatch.Start();//rozpoczêcie pomiaru czasu
+                InsertionSort(tab);//zaimplementowanie tablicy rosn¹cej do metody sortuj¹cej
+                stopwatch.Stop();//zakoñczenie pomiaru czasu
+                Console.Write(stopwatch.Elapsed.TotalSeconds.ToString("F8") + "\t");
+                stopwatch.Reset();//reset pomiaru
+                malejaca(tab);//metoda zwracaj¹ca tablicê malejaca
+                stopwatch.Start();//rozpoczêcie pomiaru czasu
+                InsertionSort(tab);//zaimplementowanie tablicy malej¹cej do metody sortuj¹cej
+                stopwatch.Stop();//zakoñcznie pomiaru czasu
+                Console.Write(stopwatch.Elapsed.TotalSeconds.ToString("F8") + "\t");
+                stopwatch.Reset();//reset pomiaru
+                stala(tab);//metoda zwracaj¹ca tablicê stala
+                stopwatch.Start();//rozpoczêcie pomiaru czasu
+                InsertionSort(tab);//zaimplementowanie tablicy sta³ej do metody sortuj¹cej
+                stopwatch.Stop();//zakoñczenie pomiaru czasu
+                Console.Write(stopwatch.Elapsed.TotalSeconds.ToString("F8") + "\t");
+                stopwatch.Reset();//reset pomiaru
+                vksztaltna(tab);//metoda zwracaj¹ca tablicê vksztaltna
+                stopwatch.Start();//rozpoczêcie pomiaru czasu
+                InsertionSort(tab);//zaimplementowanie tablicy vksztaltnej do metody sortuj¹cej
+                stopwatch.Stop();//zakoñczenie pomiaru czasu
+                Console.Write(stopwatch.Elapsed.TotalSeconds.ToString("F8") + "\n");
+                stopwatch.Reset();//reset pomiaru
+            }
+        }
+    }
+}
+
+
